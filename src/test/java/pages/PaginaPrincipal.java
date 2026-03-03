@@ -2,7 +2,8 @@ package pages;
 
 public class PaginaPrincipal extends BasePage {
 
-    private String sectionLink = "//a[normalize-space()='%s' and @href]";
+    private String sectionLink = "//header[@data-testid='header-container']//nav[@aria-label='Main']//ul//a[normalize-space()='%s']";
+    //"(//a[normalize-space()='%s' and @href])[1]";
     private String elegirUnPlanButton = "//a[normalize-space()='Elegir Plan' and @href]";
 
     public PaginaPrincipal() {
@@ -12,6 +13,7 @@ public class PaginaPrincipal extends BasePage {
     // Método para navegar a www.freerangetesters.com
     public void navigateToFreeRangeTesters() {
         navigateTo("https://www.freerangetesters.com");
+        maximizeWindow();
 
     }
 

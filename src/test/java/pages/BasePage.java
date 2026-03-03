@@ -10,7 +10,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -23,6 +22,7 @@ public class BasePage {
      * subclases
      */
     protected static WebDriver driver;
+    private static final Duration TIMEOUT = Duration.ofSeconds(10);
 
     //Declaración de una variable estática 'action' de tipo Actions
     private static Actions action;
@@ -33,7 +33,7 @@ public class BasePage {
      * el 'driver' estático
      * WebDriverWait se usa para poner esperas explícitas en los elementos web
      */
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+    WebDriverWait wait = new WebDriverWait(driver, TIMEOUT);
 
     /*
      * Configura el WebDriver para Chrome usando WebDriverManager.
@@ -67,6 +67,7 @@ public class BasePage {
 
     // Método estático para navegar a una URL.
     public static void navigateTo(String url) {
+        initDriver();
         driver.get(url);
     }
 
@@ -190,10 +191,15 @@ public class BasePage {
 	    driver.switchTo().alert().dismiss();;
     }
 
-        public static void initDriver() {
+    // ===== Driver lifecycle =====
+    public static WebDriver initDriver() {
         if (driver == null) {
+            WebDriverManager.chromedriver().setup();
             driver = new ChromeDriver();
+            driver.manage().window().maximize();
+            driver.manage().timeouts().implicitlyWait(Duration.ZERO); // explícitas only
         }
+        return driver;
     }
 
     // Método estático para cerrar la instancia del driver.
@@ -202,6 +208,11 @@ public class BasePage {
             driver.quit();
             driver = null;
         }
+    }
+
+    public static void maximizeWindow() {
+        initDriver();
+        driver.manage().window().maximize();
     }
 
     public boolean isElementDisplayed(String locator) {
@@ -218,6 +229,26 @@ public class BasePage {
 
     public static WebDriver getDriver() {
         return driver;
+    }
+
+    //Metodo para encontrar un link de texto y dar click
+    public void goToLinkText(String linkText) {
+        driver.findElement(By.linkText(linkText)).click();
+    }
+
+    // Metodo para obtener el texto del elemento
+    public String textFromElement(String locator) {
+        return Find(locator).getText();
+    }
+
+    // mostrar si un elemento es visible en pantalla
+    public boolean elementIsDisplayed(String locator) {
+        return Find(locator).isDisplayed();
+    }
+
+    //traer todos los elementos que coincidan con el locator
+    public List<WebElement> bringMeAllElements(String locator) {
+        return driver.findElements(By.className(locator));
     }
 
  

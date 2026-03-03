@@ -7,6 +7,7 @@ import org.testng.asserts.SoftAssert;
 import java.util.Arrays;
 
 import io.cucumber.java.en.*;
+import pages.BasePage;
 import pages.PaginaCursos;
 import pages.PaginaFundamentosTesting;
 import pages.PaginaPrincipal;
